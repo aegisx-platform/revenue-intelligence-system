@@ -167,7 +167,15 @@ docker compose pull && docker compose up -d
 
 # Backup database
 docker compose exec db pg_dump -U eclaim eclaim_db > backup.sql
+
+# Reset admin password
+docker compose exec web python scripts/create_user.py -u admin -p "NewPass123!" --update
+
+# สร้าง user ใหม่
+docker compose exec web python scripts/create_user.py -u newuser -p "Pass123!" --name "Name" --role user
 ```
+
+📖 **ดู commands ทั้งหมด:** [Command Reference](docs/COMMANDS.md)
 
 ---
 
