@@ -17,34 +17,22 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/01-hospital-analytics.jpg" alt="Hospital Analytics" width="100%">
+  <img src="screenshots/01.jpeg" alt="Hospital Analytics" width="100%">
 </p>
 
 <details>
 <summary><b>📊 ดู Screenshots เพิ่มเติม</b></summary>
 
-### KPI Summary & Risk Score
-<img src="screenshots/02-kpi-summary.jpg" alt="KPI Summary" width="100%">
-
-### Risk Indicators & แนวโน้มรายเดือน
-<img src="screenshots/03-risk-indicators.jpg" alt="Risk Indicators" width="100%">
-
-### เปรียบเทียบผลประกอบการหลายปี
-<img src="screenshots/04-yearly-comparison.jpg" alt="Yearly Comparison" width="100%">
-
-### รายได้ตามกองทุน
-| ตาราง | แผนภูมิแท่ง | แผนภูมิวงกลม |
-|:---:|:---:|:---:|
-| <img src="screenshots/05-fund-table.jpg" alt="Fund Table" width="300"> | <img src="screenshots/06-fund-bar.jpg" alt="Fund Bar" width="300"> | <img src="screenshots/07-fund-pie.jpg" alt="Fund Pie" width="300"> |
-
-### เปรียบเทียบกับโรงพยาบาลอื่น
-<img src="screenshots/08-hospital-compare.jpg" alt="Hospital Compare" width="100%">
-
-### เปรียบเทียบรายกองทุน
-<img src="screenshots/09-fund-compare.jpg" alt="Fund Compare" width="100%">
-
-### แนวโน้มรายเดือน (ทุกโรงพยาบาล)
-<img src="screenshots/10-monthly-trend.jpg" alt="Monthly Trend" width="100%">
+<img src="screenshots/02.jpeg" alt="Screenshot 2" width="100%">
+<img src="screenshots/03.jpeg" alt="Screenshot 3" width="100%">
+<img src="screenshots/04.jpeg" alt="Screenshot 4" width="100%">
+<img src="screenshots/05.jpeg" alt="Screenshot 5" width="100%">
+<img src="screenshots/06.jpeg" alt="Screenshot 6" width="100%">
+<img src="screenshots/07.jpeg" alt="Screenshot 7" width="100%">
+<img src="screenshots/08.jpeg" alt="Screenshot 8" width="100%">
+<img src="screenshots/09.jpeg" alt="Screenshot 9" width="100%">
+<img src="screenshots/10.jpeg" alt="Screenshot 10" width="100%">
+<img src="screenshots/11.jpeg" alt="Screenshot 11" width="100%">
 
 </details>
 
