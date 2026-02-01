@@ -1,5 +1,5 @@
-# NHSO Revenue Intelligence - Production Deployment
-# ติดตั้งผ่าน: curl -fsSL https://raw.githubusercontent.com/aegisx-platform/eclaim-rep-download/main/install.sh | bash
+# Revenue Intelligence System - Production Deployment
+# ติดตั้งผ่าน: curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash
 
 services:
   db:
@@ -19,7 +19,7 @@ services:
       retries: 5
 
   web:
-    image: ghcr.io/aegisx-platform/eclaim-rep-download:${VERSION:-latest}
+    image: ghcr.io/aegisx-platform/revenue-intelligence-system:${VERSION:-latest}
     container_name: nhso-web
     restart: unless-stopped
     environment:
@@ -38,6 +38,7 @@ services:
       - ./downloads:/app/downloads
       - ./logs:/app/logs
       - ./data:/app/data
+      - ./config:/app/config
     ports:
       - "${WEB_PORT:-5001}:5001"
     depends_on:
