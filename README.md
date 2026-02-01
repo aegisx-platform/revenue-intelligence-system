@@ -191,12 +191,16 @@ DB_PASSWORD=your_password
 
 ### License Tiers
 
-| Tier | Features |
-|------|----------|
-| **Trial** | ทดลองใช้ 30 วัน, ฟีเจอร์พื้นฐาน |
-| **Basic** | SMT Budget, Analytics พื้นฐาน |
-| **Professional** | + Reconciliation, Scheduler |
-| **Enterprise** | + API Access, Custom Reports, Priority Support |
+| Tier | ราคา/ปี | REP/STM | Analytics | Scheduled | API | Remote Support |
+|------|---------|---------|-----------|-----------|-----|----------------|
+| **Free** | ฟรี | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Standard** | ฿20,000 | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Pro** | ฿30,000 | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+#### Legacy Support
+- `basic` → maps to **Standard**
+- `professional` → maps to **Pro**
+- `enterprise` → maps to **Pro**
 
 ### ติดต่อซื้อ License
 

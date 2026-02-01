@@ -38,7 +38,8 @@ services:
       - ./downloads:/app/downloads
       - ./logs:/app/logs
       - ./data:/app/data
-      - ./config:/app/config
+      # Mount only license file, not entire config (to preserve app config files)
+      - ./config/license.lic:/app/config/license.lic:ro
     ports:
       - "${WEB_PORT:-5001}:5001"
     depends_on:
