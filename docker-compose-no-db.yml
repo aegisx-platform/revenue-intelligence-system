@@ -1,0 +1,38 @@
+# Revenue Intelligence System - External Database Mode
+# ใช้กับ PostgreSQL หรือ MySQL ที่มีอยู่แล้ว
+# ติดตั้ง: curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash -s -- --no-db
+
+services:
+  web:
+    image: ghcr.io/aegisx-platform/revenue-intelligence-system:${VERSION:-latest}
+    container_name: nhso-web
+    restart: unless-stopped
+    environment:
+      # Database Configuration (แก้ไขตาม database ของคุณ)
+      DB_TYPE: ${DB_TYPE:-postgresql}  # postgresql หรือ mysql
+      DB_HOST: ${DB_HOST:?DB_HOST is required}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-eclaim_db}
+      DB_USER: ${DB_USER:-eclaim}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      
+      # E-Claim Credentials
+      ECLAIM_USERNAME: ${ECLAIM_USERNAME}
+      ECLAIM_PASSWORD: ${ECLAIM_PASSWORD}
+      
+      # Application
+      SECRET_KEY: ${SECRET_KEY:-please-change-this-secret-key-in-production}
+      FLASK_ENV: production
+      TZ: Asia/Bangkok
+    volumes:
+      - ./downloads:/app/downloads
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./config:/app/config
+    ports:
+      - "${WEB_PORT:-5001}:5001"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4

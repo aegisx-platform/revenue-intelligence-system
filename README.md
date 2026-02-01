@@ -54,6 +54,27 @@ curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligenc
 curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash -s -- --dir /opt/revenue-intelligence
 ```
 
+### ใช้ External Database (PostgreSQL/MySQL)
+
+หากมี Database Server อยู่แล้ว:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash -s -- --no-db
+```
+
+แล้วแก้ไข `.env`:
+
+```env
+DB_TYPE=postgresql  # หรือ mysql
+DB_HOST=your-db-server.local
+DB_PORT=5432        # หรือ 3306 สำหรับ MySQL
+DB_NAME=eclaim_db
+DB_USER=eclaim
+DB_PASSWORD=your_password
+```
+
+📖 **ดูรายละเอียดเพิ่มเติม:** [Installation Guide](docs/INSTALLATION.md)
+
 ### Requirements
 
 - **Docker** 20.10+ & **Docker Compose** 2.0+
