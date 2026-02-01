@@ -1,0 +1,255 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ris
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ris-secrets
+  namespace: ris
+type: Opaque
+stringData:
+  ECLAIM_USERNAME: ""
+  ECLAIM_PASSWORD: ""
+  SECRET_KEY: "demo-secret-key-change-in-production"
+  DB_PASSWORD: "eclaim_password"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ris-db-pvc
+  namespace: ris
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ris-data-pvc
+  namespace: ris
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ris-db
+  namespace: ris
+  labels:
+    app: ris-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ris-db
+  template:
+    metadata:
+      labels:
+        app: ris-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: "eclaim"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ris-secrets
+              key: DB_PASSWORD
+        - name: POSTGRES_DB
+          value: "eclaim_db"
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+          subPath: pgdata
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - eclaim
+            - -d
+            - eclaim_db
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - eclaim
+            - -d
+            - eclaim_db
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: ris-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ris-db
+  namespace: ris
+spec:
+  selector:
+    app: ris-db
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ris-web
+  namespace: ris
+  labels:
+    app: ris-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ris-web
+  template:
+    metadata:
+      labels:
+        app: ris-web
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: web
+        image: ghcr.io/aegisx-platform/revenue-intelligence-system:develop
+        ports:
+        - containerPort: 5001
+        env:
+        - name: ECLAIM_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: ris-secrets
+              key: ECLAIM_USERNAME
+        - name: ECLAIM_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ris-secrets
+              key: ECLAIM_PASSWORD
+        - name: DB_TYPE
+          value: "postgresql"
+        - name: DB_HOST
+          value: "ris-db"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "eclaim_db"
+        - name: DB_USER
+          value: "eclaim"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ris-secrets
+              key: DB_PASSWORD
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ris-secrets
+              key: SECRET_KEY
+        - name: FLASK_ENV
+          value: "production"
+        - name: TZ
+          value: "Asia/Bangkok"
+        volumeMounts:
+        - name: data
+          mountPath: /app/downloads
+          subPath: downloads
+        - name: data
+          mountPath: /app/logs
+          subPath: logs
+        - name: data
+          mountPath: /app/data
+          subPath: data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5001
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5001
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: ris-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ris-web
+  namespace: ris
+spec:
+  selector:
+    app: ris-web
+  ports:
+  - port: 80
+    targetPort: 5001
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ris-web
+  namespace: ris
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - ris.aegisxplatform.com
+    secretName: ris-tls
+  rules:
+  - host: ris.aegisxplatform.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ris-web
+            port:
+              number: 80
