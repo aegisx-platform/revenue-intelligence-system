@@ -185,8 +185,13 @@ curl -fsSL "${GITHUB_RAW}/${COMPOSE_FILE}" -o docker-compose.yml
 echo -e "${GREEN}✓ Downloaded docker-compose.yml (${DB_TYPE})${NC}"
 
 # Create directories
-mkdir -p downloads/{rep,stm,smt} logs data config
+mkdir -p downloads/{rep,stm,smt} logs data user_data
 echo -e "${GREEN}✓ Created directories${NC}"
+
+# Create user_data files (for Docker volume mounts)
+touch user_data/license.lic
+[ ! -f user_data/settings.json ] && echo '{}' > user_data/settings.json
+echo -e "${GREEN}✓ Created user_data files${NC}"
 
 # Create .env
 echo -e "${YELLOW}[4/7] Configuring credentials...${NC}"

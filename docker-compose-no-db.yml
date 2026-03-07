@@ -24,11 +24,12 @@ services:
       SECRET_KEY: ${SECRET_KEY:-please-change-this-secret-key-in-production}
       FLASK_ENV: production
       TZ: Asia/Bangkok
+      USER_DATA_DIR: /app/user_data
     volumes:
       - ./downloads:/app/downloads
       - ./logs:/app/logs
       - ./data:/app/data
-      - ./config:/app/config
+      - ./user_data:/app/user_data
     ports:
       - "${WEB_PORT:-5001}:5001"
     extra_hosts:

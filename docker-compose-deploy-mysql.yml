@@ -1,19 +1,21 @@
-# Revenue Intelligence System - Production Deployment
-# ติดตั้งผ่าน: curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash
+# Revenue Intelligence System - Production Deployment (MySQL)
+# ติดตั้งผ่าน: curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash -s -- --mysql
 
 services:
   db:
-    image: postgres:15-alpine
+    image: mysql:8.0
     container_name: nhso-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: eclaim
-      POSTGRES_PASSWORD: eclaim_password
-      POSTGRES_DB: eclaim_db
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: eclaim_db
+      MYSQL_USER: eclaim
+      MYSQL_PASSWORD: eclaim_password
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --log-bin-trust-function-creators=1
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U eclaim -d eclaim_db"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,9 +27,9 @@ services:
     environment:
       ECLAIM_USERNAME: ${ECLAIM_USERNAME}
       ECLAIM_PASSWORD: ${ECLAIM_PASSWORD}
-      DB_TYPE: postgresql
+      DB_TYPE: mysql
       DB_HOST: db
-      DB_PORT: 5432
+      DB_PORT: 3306
       DB_NAME: eclaim_db
       DB_USER: eclaim
       DB_PASSWORD: eclaim_password

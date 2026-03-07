@@ -178,10 +178,10 @@ DB_PASSWORD=your_password
 |-----------|-------------|
 | `./downloads/` | ไฟล์ REP, STM, SMT ที่ดาวน์โหลด |
 | `./logs/` | Log files |
-| `./data/` | Settings และข้อมูลระบบ |
-| `./config/` | **License file** (`license.lic`) |
+| `./data/` | ข้อมูลระบบ |
+| `./user_data/` | **License file** (`license.lic`) + Settings (`settings.json`) |
 
-> ⚠️ **สำคัญ:** อย่าลบ folder `config/` เพราะมีไฟล์ license อยู่!
+> ⚠️ **สำคัญ:** อย่าลบ folder `user_data/` เพราะมีไฟล์ license และ settings อยู่!
 
 ---
 
