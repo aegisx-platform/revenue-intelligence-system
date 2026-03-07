@@ -144,7 +144,7 @@ docker compose restart web
 **วิธีที่ 2: Copy ไฟล์โดยตรง**
 
 ```bash
-cp /path/to/your/license.lic ./config/license.lic
+cp /path/to/your/license.lic ./user_data/license.lic
 docker compose restart web
 ```
 
@@ -238,8 +238,8 @@ services:
 | File | Description |
 |------|-------------|
 | `.env` | Environment variables |
-| `./config/license.lic` | License file |
-| `./data/settings.json` | Application settings |
+| `./user_data/license.lic` | License file |
+| `./user_data/settings.json` | Application settings |
 
 ---
 

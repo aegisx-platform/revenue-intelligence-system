@@ -203,7 +203,7 @@ curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligenc
 | `./downloads/` | ไฟล์ REP, STM, SMT ที่ดาวน์โหลด |
 | `./logs/` | Log files |
 | `./data/` | Settings และข้อมูลระบบ |
-| `./config/` | License file (`license.lic`) |
+| `./user_data/` | License file + Settings (`license.lic`, `settings.json`) |
 
 ---
 
@@ -223,7 +223,7 @@ docker compose logs web | grep -i database
 
 ```bash
 # แก้ไข ownership
-sudo chown -R $USER:$USER ./downloads ./logs ./data ./config
+sudo chown -R $USER:$USER ./downloads ./logs ./data ./user_data
 ```
 
 ### ปัญหา: Port 5001 ถูกใช้งานอยู่

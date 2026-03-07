@@ -1,0 +1,14 @@
+# Runtime data (created by install.sh / docker)
+downloads/
+logs/
+data/
+user_data/
+config/
+
+# Environment
+.env
+.admin-credentials
+
+# OS
+.DS_Store
+Thumbs.db

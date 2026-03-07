@@ -167,7 +167,7 @@ print('User deleted')
 
 ```bash
 # ลบ settings file
-rm ./data/settings.json
+rm ./user_data/settings.json
 
 # Restart
 docker compose restart web
@@ -210,7 +210,7 @@ rm -rf ./downloads/rep/*  # ลบเฉพาะ REP
 docker compose down -v
 
 # ลบ data ทั้งหมด
-rm -rf ./downloads/* ./logs/* ./data/* ./config/*
+rm -rf ./downloads/* ./logs/* ./data/* ./user_data/*
 
 # ติดตั้งใหม่
 docker compose up -d
@@ -246,10 +246,10 @@ docker compose exec db mysqldump -u eclaim -p eclaim_db > backup_$(date +%Y%m%d)
 
 ```bash
 # Backup ทุกอย่าง
-tar -czvf backup_$(date +%Y%m%d).tar.gz ./downloads ./data ./config ./logs
+tar -czvf backup_$(date +%Y%m%d).tar.gz ./downloads ./data ./user_data ./logs
 
 # Backup เฉพาะ config และ license
-tar -czvf backup_config_$(date +%Y%m%d).tar.gz ./config ./data
+tar -czvf backup_userdata_$(date +%Y%m%d).tar.gz ./user_data
 ```
 
 ### Restore Database

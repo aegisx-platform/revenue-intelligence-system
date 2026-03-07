@@ -225,14 +225,14 @@ docker system df
 ### Reset Settings
 
 ```bash
-rm ./data/settings.json
+rm ./user_data/settings.json
 docker compose restart web
 ```
 
 ### Reset License
 
 ```bash
-rm ./config/license.lic
+rm ./user_data/license.lic
 docker compose restart web
 ```
 
@@ -250,7 +250,7 @@ docker compose restart web
 docker compose down -v
 
 # ลบ data
-rm -rf ./downloads/* ./logs/* ./data/* ./config/*
+rm -rf ./downloads/* ./logs/* ./data/* ./user_data/*
 
 # Start ใหม่
 docker compose up -d
@@ -323,7 +323,7 @@ docker compose exec web python scripts/create_user.py -u admin -p admin123 --upd
 docker compose restart web && docker compose logs -f web
 
 # Backup database + files
-pg_dump && tar -czvf backup.tar.gz ./downloads ./data ./config
+pg_dump && tar -czvf backup.tar.gz ./downloads ./data ./user_data
 
 # Check health
 docker compose ps && docker compose logs --tail 5 web
