@@ -162,7 +162,7 @@ else
     echo -e "${BLUE}3. Manual Setup:${NC}"
     echo "   sudo mkdir -p $FULL_PATH && cd $FULL_PATH"
     echo "   sudo curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/docker-compose-deploy.yml -o docker-compose.yml"
-    echo "   sudo mkdir -p downloads/{rep,stm,smt} logs config"
+    echo "   sudo mkdir -p downloads/{rep,stm,smt} logs data user_data"
     echo "   sudo chown -R \$USER:\$USER ."
     echo "   # สร้าง .env แล้ว: docker compose pull && docker compose up -d"
     echo ""
