@@ -3,6 +3,19 @@
 # ติดตั้ง: curl -fsSL https://raw.githubusercontent.com/aegisx-platform/revenue-intelligence-system/main/install.sh | bash -s -- --no-db
 
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: nhso-redis
+    restart: unless-stopped
+    command: redis-server --save 300 1 --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
   web:
     image: ghcr.io/aegisx-platform/revenue-intelligence-system:${VERSION:-latest}
     container_name: nhso-web
@@ -15,11 +28,15 @@ services:
       DB_NAME: ${DB_NAME:-eclaim_db}
       DB_USER: ${DB_USER:-eclaim}
       DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
-      
+
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
       # E-Claim Credentials
       ECLAIM_USERNAME: ${ECLAIM_USERNAME}
       ECLAIM_PASSWORD: ${ECLAIM_PASSWORD}
-      
+
       # Application
       SECRET_KEY: ${SECRET_KEY:-please-change-this-secret-key-in-production}
       FLASK_ENV: production
@@ -32,8 +49,14 @@ services:
       - ./user_data:/app/user_data
     ports:
       - "${WEB_PORT:-5001}:5001"
+    depends_on:
+      redis:
+        condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
     dns:
       - 8.8.8.8
       - 8.8.4.4
+
+volumes:
+  redis_data:

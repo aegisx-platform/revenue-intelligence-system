@@ -18,6 +18,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: nhso-redis
+    restart: unless-stopped
+    command: redis-server --save 300 1 --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
   web:
     image: ghcr.io/aegisx-platform/revenue-intelligence-system:${VERSION:-latest}
     container_name: nhso-web
@@ -31,6 +44,8 @@ services:
       DB_NAME: eclaim_db
       DB_USER: eclaim
       DB_PASSWORD: eclaim_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       SECRET_KEY: ${SECRET_KEY:-please-change-this-secret-key-in-production}
       FLASK_ENV: production
       TZ: Asia/Bangkok
@@ -45,6 +60,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
     dns:
@@ -53,3 +70,4 @@ services:
 
 volumes:
   db_data:
+  redis_data:
