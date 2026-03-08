@@ -83,6 +83,7 @@ echo -e "${NC}"
 echo -e "${YELLOW}การติดตั้ง:${NC}"
 echo -e "  📁 โฟลเดอร์: ${BLUE}${FULL_PATH}${NC}"
 echo -e "  🗄️  Database: ${BLUE}${DB_DISPLAY}${NC}"
+echo -e "  📮 Queue:    ${BLUE}Redis 7${NC}"
 echo -e "  🐳 Version:  ${BLUE}${VERSION}${NC}"
 echo ""
 
@@ -252,10 +253,25 @@ fi
 $DOCKER_COMPOSE pull
 $DOCKER_COMPOSE up -d
 
+# Verify Redis is healthy
+echo ""
+echo -e "${YELLOW}[6/8] Checking Redis...${NC}"
+for i in {1..15}; do
+    if $DOCKER_COMPOSE exec -T redis redis-cli ping 2>/dev/null | grep -q "PONG"; then
+        echo -e "${GREEN}✓ Redis is running${NC}"
+        break
+    fi
+    if [ "$i" -eq 15 ]; then
+        echo -e "${YELLOW}⚠️  Redis may still be starting up${NC}"
+    fi
+    echo -n "."
+    sleep 1
+done
+
 # Wait for database initialization (skip if --no-db mode)
 if [ "$DB_TYPE" != "none" ]; then
     echo ""
-    echo -e "${YELLOW}[6/7] Waiting for database initialization...${NC}"
+    echo -e "${YELLOW}[7/8] Waiting for database initialization...${NC}"
     echo -e "${BLUE}   Checking migrations...${NC}"
 
     # Wait for migrations to complete (max 60 seconds)
@@ -270,7 +286,7 @@ if [ "$DB_TYPE" != "none" ]; then
     echo ""
 
     # Run seed data
-    echo -e "${YELLOW}[7/7] Importing seed data...${NC}"
+    echo -e "${YELLOW}[8/8] Importing seed data...${NC}"
     echo -e "${BLUE}   This may take 30-60 seconds...${NC}"
     echo ""
 
